@@ -5,7 +5,7 @@ import 'package:flutter/widgets.dart';
 class BarrageValue {
   const BarrageValue({
     this.isPlaying = false,
-    this.scrollRate = 0.0
+    this.scrollRate = 0.0,
   });
 
   /// 弹幕是否滚动
@@ -27,11 +27,11 @@ class BarrageValue {
 
   BarrageValue copy({
     bool isPlaying,
-    double scrollRate
+    double scrollRate,
   }) {
     return BarrageValue(
-        isPlaying: isPlaying ?? this.isPlaying,
-        scrollRate: scrollRate ?? this.scrollRate
+      isPlaying: isPlaying ?? this.isPlaying,
+      scrollRate: scrollRate ?? this.scrollRate,
     );
   }
 
@@ -49,9 +49,9 @@ class BarrageController extends ValueNotifier<BarrageValue> {
 
   BarrageController({
     @required this.content,
-    this.duration = defaultDuration
+    this.duration = defaultDuration,
   }) : assert(content != null),
-        super(const BarrageValue());
+       super(const BarrageValue());
 
   /// 弹幕内容
   final Widget content;
@@ -107,8 +107,8 @@ class _BarrageState extends State<Barrage> with TickerProviderStateMixin {
     });
 
     _offsetAnimation = Tween<Offset>(
-        begin: const Offset(1.0, 0.0),
-        end: const Offset(-1.0, 0.0)
+      begin: const Offset(1.0, 0.0),
+      end: const Offset(-1.0, 0.0),
     ).animate(_animationController);
 
     _playPauseState = _PlayPauseState(barrageController)
@@ -193,8 +193,8 @@ class BarrageItem {
     this.speed = 1.0,
     this.start = true,
   }) : assert(content != null),
-        assert(speed != null),
-        assert(speed > 0.0);
+       assert(speed != null),
+       assert(speed > 0.0);
 
   /// 弹幕内容
   final Widget content;
@@ -222,9 +222,9 @@ class BarrageItem {
 class ChannelOptions {
   ChannelOptions({
     @required this.height,
-    this.direction = ChannelDirection.rtl // TODO
+    this.direction = ChannelDirection.rtl, // TODO
   }) : assert(height != null),
-        assert(height >= 0.0);
+       assert(height >= 0.0);
 
   /// 弹道高度
   final double height;
@@ -283,8 +283,8 @@ class ChannelController
   void add(BarrageItem item) {
     var micros = BarrageController.defaultDuration.inMicroseconds;
     var controller = BarrageController(
-        content: item.content,
-        duration: Duration(microseconds: micros ~/ item.speed)
+      content: item.content,
+      duration: Duration(microseconds: micros ~/ item.speed),
     );
 
     if (item.start) {
@@ -405,7 +405,7 @@ class _BarrageChannelState extends State<BarrageChannel> {
 class BarrageWall extends StatelessWidget {
   const BarrageWall({
     Key key,
-    @required this.controller
+    @required this.controller,
   }) : super(key: key);
 
   final BarrageWallController controller;
@@ -422,15 +422,15 @@ class BarrageWallController {
 
   BarrageWallController.all({
     @required ChannelOptions options,
-    @required int channelCount
+    @required int channelCount,
   }) : assert(options != null),
-        assert(channelCount != null),
-        assert(channelCount >= 0),
-        _channels = List.generate(
-            channelCount,
-                (index) => ChannelController(options),
-            growable: false
-        );
+       assert(channelCount != null),
+       assert(channelCount >= 0),
+       _channels = List.generate(
+         channelCount,
+         (index) => ChannelController(options),
+         growable: false,
+       );
 
   final List<ChannelController> _channels;
 
@@ -490,6 +490,9 @@ class BarrageWallController {
 
   /// 清空某条弹道
   void clearOne(int index) {
+    if (index < 0 || index >= _channels.length) {
+      return;
+    }
     _channels[index].clear();
   }
 
@@ -508,19 +511,31 @@ class BarrageWallController {
 
   /// 暂停某条弹道
   void pauseOne(int index) {
+    if (index < 0 || index >= _channels.length) {
+      return;
+    }
     _channels[index].pause();
   }
 
   void playOne(int index) {
+    if (index < 0 || index >= _channels.length) {
+      return;
+    }
     _channels[index].play();
   }
 
   /// 暂停某条弹幕
-  void pauseOneItem(BarrageItem item, int index) {
+  void pauseItem(BarrageItem item, int index) {
+    if (index < 0 || index >= _channels.length) {
+      return;
+    }
     _channels[index].pauseOne(item);
   }
 
   void playItem(BarrageItem item, int index) {
+    if (index < 0 || index >= _channels.length) {
+      return;
+    }
     _channels[index].playOne(item);
   }
 
