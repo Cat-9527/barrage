@@ -94,7 +94,7 @@ class _BarrageState extends State<Barrage> with TickerProviderStateMixin {
   _PlayPauseState _playPauseState;
 
   void _initAnimation() {
-    var barrageController = widget.barrageController;
+    final barrageController = widget.barrageController;
 
     _animationController = AnimationController(
       value: barrageController.value.scrollRate,
@@ -253,8 +253,8 @@ class ChannelController
 
   /// 是否空闲状态
   bool get isIdle {
-    for (var entry in value.entries) {
-      var barrageController = entry.value;
+    for (final entry in value.entries) {
+      final barrageController = entry.value;
       if (barrageController.value.scrollIn) {
         // 此弹道还有弹幕未完全进入屏幕
         return false;
@@ -269,9 +269,9 @@ class ChannelController
   /// See [BarrageValue.scrollRate]
   double get lastItemScrollRate {
     double minScrollRate = 1.0;
-    for (var entry in value.entries) {
-      var barrageController = entry.value;
-      var scrollRate = barrageController.value.scrollRate;
+    for (final entry in value.entries) {
+      final barrageController = entry.value;
+      final scrollRate = barrageController.value.scrollRate;
       if (scrollRate < minScrollRate) {
         minScrollRate = scrollRate;
       }
@@ -281,8 +281,8 @@ class ChannelController
 
   /// 向弹道添加一条弹幕
   void add(BarrageItem item) {
-    var micros = BarrageController.defaultDuration.inMicroseconds;
-    var controller = BarrageController(
+    final micros = BarrageController.defaultDuration.inMicroseconds;
+    final controller = BarrageController(
       content: item.content,
       duration: Duration(microseconds: micros ~/ item.speed),
     );
@@ -437,7 +437,7 @@ class BarrageWallController {
   /// 自动调度，添加到最空闲弹道
   /// Returns the index of channel in [_channels]
   int add(BarrageItem item) {
-    var channel = _resolveOptimalChannel();
+    final channel = _resolveOptimalChannel();
     channel?.add(item);
     return channel == null
         ? -1
@@ -445,14 +445,14 @@ class BarrageWallController {
   }
 
   ChannelController _resolveOptimalChannel() {
-    for (var channel in _channels) {
+    for (final channel in _channels) {
       if (channel.isIdle) {
         return channel;
       }
     }
 
     ChannelController result;
-    for (var channel in _channels) {
+    for (final channel in _channels) {
       if (result == null
           || channel.lastItemScrollRate > result.lastItemScrollRate) {
         result = channel;
